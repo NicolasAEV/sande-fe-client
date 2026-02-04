@@ -1,0 +1,150 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-6">
+      <button
+        (click)="cancelar()"
+        class="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors">
+        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver a contactos
+      </button>
+      <h1 class="text-3xl font-bold text-gray-900">
+        {{ isEditMode ? 'Editar Contacto' : 'Nuevo Contacto' }}
+      </h1>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="bg-white rounded-lg shadow p-8 text-center">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <p class="mt-4 text-gray-600">Cargando datos...</p>
+    </div>
+
+    <!-- Form -->
+    <div *ngIf="!isLoading" class="bg-white rounded-lg shadow">
+      <form [formGroup]="contactoForm" (ngSubmit)="onSubmit()" class="p-6 space-y-6">
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+          {{ errorMessage }}
+        </div>
+
+        <!-- RUT -->
+        <div>
+          <label for="rutContacto" class="block text-sm font-medium text-gray-700 mb-1">
+            RUT <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="rutContacto"
+            formControlName="rutContacto"
+            [class.border-red-500]="isFieldInvalid('rutContacto')"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500"
+            placeholder="12.345.678-9">
+          <p *ngIf="isFieldInvalid('rutContacto')" class="mt-1 text-sm text-red-600">
+            {{ getErrorMessage('rutContacto') }}
+          </p>
+          <p *ngIf="isEditMode" class="mt-1 text-xs text-gray-500">
+            El RUT no puede ser modificado
+          </p>
+        </div>
+
+        <!-- Nombre -->
+        <div>
+          <label for="nombreContacto" class="block text-sm font-medium text-gray-700 mb-1">
+            Nombre Completo <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="nombreContacto"
+            formControlName="nombreContacto"
+            [class.border-red-500]="isFieldInvalid('nombreContacto')"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Juan Pérez González">
+          <p *ngIf="isFieldInvalid('nombreContacto')" class="mt-1 text-sm text-red-600">
+            {{ getErrorMessage('nombreContacto') }}
+          </p>
+        </div>
+
+        <!-- Abreviación -->
+        <div>
+          <label for="abreviacion" class="block text-sm font-medium text-gray-700 mb-1">
+            Abreviación <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="abreviacion"
+            formControlName="abreviacion"
+            [class.border-red-500]="isFieldInvalid('abreviacion')"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="J. Pérez">
+          <p *ngIf="isFieldInvalid('abreviacion')" class="mt-1 text-sm text-red-600">
+            {{ getErrorMessage('abreviacion') }}
+          </p>
+        </div>
+
+        <!-- Teléfono -->
+        <div>
+          <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">
+            Teléfono <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="tel"
+            id="telefono"
+            formControlName="telefono"
+            [class.border-red-500]="isFieldInvalid('telefono')"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="+56 9 1234 5678">
+          <p *ngIf="isFieldInvalid('telefono')" class="mt-1 text-sm text-red-600">
+            {{ getErrorMessage('telefono') }}
+          </p>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+            Email <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            [class.border-red-500]="isFieldInvalid('email')"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="ejemplo@correo.com">
+          <p *ngIf="isFieldInvalid('email')" class="mt-1 text-sm text-red-600">
+            {{ getErrorMessage('email') }}
+          </p>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t">
+          <button
+            type="submit"
+            [disabled]="isSaving || contactoForm.invalid"
+            class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2">
+            <span *ngIf="isSaving" class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+            {{ isSaving ? 'Guardando...' : (isEditMode ? 'Actualizar Contacto' : 'Crear Contacto') }}
+          </button>
+          <button
+            type="button"
+            (click)="cancelar()"
+            [disabled]="isSaving"
+            class="flex-1 px-6 py-3 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Helper Text -->
+    <div class="mt-4 text-sm text-gray-600 bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <p class="font-medium text-blue-900 mb-2">Información importante:</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li>Todos los campos marcados con <span class="text-red-500">*</span> son obligatorios</li>
+        <li *ngIf="isEditMode">El RUT del contacto no puede ser modificado</li>
+        <li>El email debe tener un formato válido</li>
+      </ul>
+    </div>
+  </div>
+</div>
