@@ -63,9 +63,7 @@ export class ContactosListComponent implements OnInit {
     const term = this.searchTerm.toLowerCase();
     this.contactosFiltrados = this.contactos.filter(contacto =>
       contacto.nombreContacto.toLowerCase().includes(term) ||
-      contacto.rutContacto.toLowerCase().includes(term) ||
-      contacto.email.toLowerCase().includes(term) ||
-      contacto.telefono.includes(term)
+      contacto.rutContacto.toLowerCase().includes(term)
     );
   }
 

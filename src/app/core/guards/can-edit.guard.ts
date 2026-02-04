@@ -7,7 +7,7 @@ export const canEditGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.canEdit()) {
+  if (authService.canCreate()) {
     return true;
   }
 

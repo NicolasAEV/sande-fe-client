@@ -37,8 +37,7 @@ export class LoginComponent {
     this.authService.login(this.credentials.username, this.credentials.password).subscribe({
       next: (user) => {
         if (user) {
-          console.log('Login exitoso', user);
-          this.router.navigate([AppRoutes.CONTACTOS]);
+                    this.router.navigate([AppRoutes.CONTACTOS]);
         }
       },
       error: (error) => {
