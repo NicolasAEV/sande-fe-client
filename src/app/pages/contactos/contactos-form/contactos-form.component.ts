@@ -36,6 +36,7 @@ export class ContactosFormComponent implements OnInit {
     this.isEditMode = !!this.idContacto;
 
     if (this.isEditMode && this.idContacto) {
+      this.contactoForm.get('rutContacto')?.disable();
       this.cargarContacto(this.idContacto);
     }
   }
@@ -48,11 +49,6 @@ export class ContactosFormComponent implements OnInit {
       telefono: ['', [Validators.required, Validators.maxLength(20)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]]
     });
-
-    // Si es modo edición, deshabilitar el RUT
-    if (this.isEditMode) {
-      this.contactoForm.get('rutContacto')?.disable();
-    }
   }
 
   private cargarContacto(idContacto: string): void {
